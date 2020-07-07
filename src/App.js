@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import "./App.css";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Header from "./components/Header";
 import Admin from "./pages/Admin";
-
-import "./App.css";
 
 function App() {
     return (

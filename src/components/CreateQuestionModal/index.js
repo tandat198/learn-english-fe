@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
-
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import CreateIcon from "@material-ui/icons/CreateRounded";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -35,37 +35,65 @@ const useStyles = makeStyles((theme) => ({
         display: "block",
         fontSize: 20,
         marginTop: 10,
+        marginBottom: 10,
+    },
+    button: {
+        marginLeft: 30,
     },
 }));
 
 export default function TransitionsModal() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [grade, setGrade] = React.useState(0);
-    const [answers, setAnswers] = React.useState([{ label: "Đáp án 1" }, { label: "Đáp án 2" }, { label: "Đáp án 3" }, { label: "Đáp án 4" }]);
-    const [trueAnswer, setTrueAnswer] = React.useState(0);
-    const handleChange = (event) => {
-        setGrade(event.target.value);
-    };
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    const [open, setOpen] = useState(false);
+    const [grade, setGrade] = useState(0);
+    const [question, setQuestion] = useState("");
+    const [answers, setAnswers] = useState(["", "", "", ""]);
+    const [trueAnswer, setTrueAnswer] = useState(0);
+    const [explain, setExplain] = useState("");
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleGradeChange = (e) => {
+        setGrade(e.target.value);
+    };
+    const handleQues = (e) => {
+        setQuestion(e.target.value);
+    };
+    const handleAnswersChange = (e, index) => {
+        e.persist();
+        setAnswers((answers) =>
+            answers
+                .slice(0, index)
+                .concat([e.target.value])
+                .concat(answers.slice(index + 1, answers.length))
+        );
+    };
+    const handleTrueAnswerChange = (e) => {
+        setTrueAnswer(e.target.value);
+    };
+    const handleExplainChange = (e) => {
+        setExplain(e.target.value);
+    };
+    const toggleModalCreate = () => {
+        setOpen(!open);
+    };
+    const handleCreateQues = () => {
+        console.log(grade);
+        console.log(question);
+        console.log(answers);
+        console.log(trueAnswer);
+        console.log(explain);
     };
 
     return (
         <div>
-            <Button variant='contained' color='primary' onClick={handleOpen}>
-                Tạo mới
-            </Button>
+            <IconButton variant='contained' color='primary' onClick={toggleModalCreate}>
+                <CreateIcon />
+            </IconButton>
             <Modal
                 aria-labelledby='transition-modal-title'
                 aria-describedby='transition-modal-description'
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+                onClose={toggleModalCreate}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -74,29 +102,37 @@ export default function TransitionsModal() {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <TextField className={classes.question} id='standard-basic' label='Câu hỏi' />
+                        <TextField onChange={handleQues} className={classes.question} label='Câu hỏi' />
                         <FormControl variant='filled' className={classes.formControl}>
                             <InputLabel id='demo-simple-select-filled-label'>Lớp</InputLabel>
-                            <Select labelId='demo-simple-select-filled-label' id='demo-simple-select-filled' value={grade} onChange={handleChange}>
-                                <MenuItem value={6}>6</MenuItem>
-                                <MenuItem value={7}>7</MenuItem>
-                                <MenuItem value={8}>8</MenuItem>
-                                <MenuItem value={9}>9</MenuItem>
+                            <Select labelId='demo-simple-select-filled-label' value={grade} onChange={handleGradeChange}>
+                                {[6, 7, 8, 9].map((grade) => (
+                                    <MenuItem key={grade} value={grade}>
+                                        {grade}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
-                        {answers.map((answer) => (
-                            <TextField className={classes.question} id='standard-basic' label={answer.label} />
+                        {["Đáp án 1", "Đáp án 2", "Đáp án 3", "Đáp án 4"].map((answer, index) => (
+                            <TextField key={index} className={classes.question} label={answer} value={answers[index]} onChange={(e) => handleAnswersChange(e, index)} />
                         ))}
                         <FormControl variant='filled' className={classes.formControl}>
                             <InputLabel id='demo-simple-select-filled-label'>Đáp án đúng</InputLabel>
-                            <Select labelId='demo-simple-select-filled-label' id='demo-simple-select-filled' value={trueAnswer} onChange={handleChange}>
-                                <MenuItem value={6}>1</MenuItem>
-                                <MenuItem value={7}>2</MenuItem>
-                                <MenuItem value={8}>3</MenuItem>
-                                <MenuItem value={9}>4</MenuItem>
+                            <Select labelId='demo-simple-select-filled-label' value={trueAnswer} onChange={handleTrueAnswerChange}>
+                                {[1, 2, 3, 4].map((answerIndex) => (
+                                    <MenuItem key={answerIndex} value={answerIndex - 1}>
+                                        {answerIndex}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
-                        <textarea className={classes.explain} placeholder='Giải thích' rows='8' cols='100' />
+                        <textarea onChange={handleExplainChange} className={classes.explain} placeholder='Giải thích' rows='8' cols='100' />
+                        <Button onClick={toggleModalCreate} variant='contained' color='secondary'>
+                            Hủy
+                        </Button>
+                        <Button onClick={handleCreateQues} className={classes.button} variant='contained' color='primary'>
+                            Tạo
+                        </Button>
                     </div>
                 </Fade>
             </Modal>
