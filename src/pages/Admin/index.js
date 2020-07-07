@@ -10,8 +10,8 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import StudentIcon from "@material-ui/icons/PeopleAltRounded";
-import QuestionIcon from "@material-ui/icons/QuestionAnswer";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
 import LessonTable from "../../components/LessonTable";
 
 const drawerWidth = 240;
@@ -49,7 +49,7 @@ export default function PermanentDrawerLeft() {
             <AppBar position='fixed' className={classes.appBar}>
                 <Toolbar>
                     <Typography variant='h6' noWrap>
-                        LMS
+                        Permanent drawer
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -66,7 +66,7 @@ export default function PermanentDrawerLeft() {
                 <List>
                     {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
                         <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <StudentIcon /> : <QuestionIcon />}</ListItemIcon>
+                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}
@@ -75,7 +75,7 @@ export default function PermanentDrawerLeft() {
                 <List>
                     {["All mail", "Trash", "Spam"].map((text, index) => (
                         <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <StudentIcon /> : <QuestionIcon />}</ListItemIcon>
+                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}
